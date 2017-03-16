@@ -11,4 +11,5 @@
 @interface ClassNode : NSObject
 - (instancetype)initWithClassName:(NSString*)name subclasses:(NSString*)subclase;
 - (BOOL)compareAndCombineWithClass:(ClassNode*)node;
+- (NSString*) descriptionWithLvl:(NSInteger)level;
 @end

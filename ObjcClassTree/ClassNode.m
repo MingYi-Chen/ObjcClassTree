@@ -20,7 +20,11 @@
 {
     self = [super init];
     if (self) {
-        self.subClassNodes = [NSMutableArray arrayWithObject:subclase];
+        self.subClassNodes = [NSMutableArray array];
+        if (subclase) {
+            ClassNode *subnode = [[ClassNode alloc] initWithClassName:subclase subclasses:nil];
+            [_subClassNodes addObject:subnode];
+        }
         self.name = name;
     }
     return self;
@@ -54,5 +58,20 @@
     return NO;
 }
 
+- (NSString*) descriptionWithLvl:(NSInteger)level {
+    __block NSMutableString * desc = [NSMutableString string];
+    for (NSInteger i=0; i<level; i++) {
+        [desc appendString:@"├──"];
+    }
+    [desc appendString:self.name];
+    
+    level+=1;
+    [self.subClassNodes enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        ClassNode* node = (ClassNode*)obj;
+        [desc appendString:@"\n"];
+        [desc appendString:[node descriptionWithLvl:level]];
+    }];
+    return desc;
+}
 
 @end
