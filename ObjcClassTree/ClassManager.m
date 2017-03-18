@@ -49,32 +49,7 @@
             }
         }
     }
-    
     [self classPair];
-
-    /*
-     |	└──RACSignal
-     |	|	├──RACChannelTerminal
-     |	|	├──RACDynamicSignal
-     |	|	├──RACEmptySignal
-     |	|	├──RACErrorSignal
-     |	|	├──RACReturnSignal
-     |	|	└──RACSubject
-     |	|		├──RACBehaviorSubject
-     |	|		├──RACGroupedSignal
-     |	|		└──RACReplaySubject
-     ├──RACSubscriber
-     ├──RACSubscriptingAssignmentTrampoline
-     ├──RACTuple
-     ├──RACTupleNil
-     ├──RACTupleUnpackingTrampoline
-     ├──RACUnit
-     ├──RNCryptor
-     |	├──RNDecryptor
-     |	|	└──RNOpenSSLDecryptor
-     |	└──RNEncryptor
-     |	|	└──RNOpenSSLEncryptor
-     */
     return self;
 }
 
@@ -110,7 +85,7 @@
     NSMutableString * desc = [NSMutableString string];
     for (NSInteger i=0; i<_classNodes.count; i++) {
         ClassNode* node = (ClassNode*)_classNodes[i];
-        NSNumber *end = [NSNumber numberWithBool:NO];
+        NSNumber *end = [NSNumber numberWithBool:YES];
         NSArray *ends = [NSArray arrayWithObject:end];
         [desc appendString:[node descriptionWithLvl:0 ends:ends]];
     }

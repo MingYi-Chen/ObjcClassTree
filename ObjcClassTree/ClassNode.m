@@ -73,26 +73,22 @@
 
 - (NSString*) descriptionWithLvl:(NSInteger)level ends:(NSArray*)ends {
     __block NSMutableString * desc = [NSMutableString string];
-//    NSNumber *number ;
-//    [number boolValue];
+
     if (level==0) {
         [desc appendString:@"\n"];
         [desc appendString:@"\n"];
     }
-    else {
-        for (NSInteger i=0; i<level; i++) {
-            [desc appendString:@"\t"];
-            NSNumber* isEnd = (NSNumber*)ends[i];
-            if (![isEnd boolValue] && i != level-1 ) {
-                [desc appendString:@"|"];
-            }
-            else {
-                
-            }
-            
+
+    for (NSInteger i=0; i<level; i++) {
+        NSNumber* isEnd = (NSNumber*)ends[i];
+        if (![isEnd boolValue]) {
+            [desc appendString:@"|"];
         }
-        NSNumber *laseEnd = [ends lastObject];
-        
+        [desc appendString:@"\t"];            
+    }
+    NSNumber *laseEnd = [ends lastObject];
+    
+    if (level!=0) {
         [desc appendString: ([laseEnd boolValue])?@"└──": @"├──"];
     }
     [desc appendString:self.name];
