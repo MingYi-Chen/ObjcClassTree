@@ -11,7 +11,7 @@
 
 @interface ClassManager()
 @property (nonatomic,retain) NSMutableArray *classNodes;
-@property (nonatomic,assign,getter=isDone) BOOL Done;
+@property (nonatomic,assign) NSInteger classNum;
 @end
 
 
@@ -21,14 +21,13 @@
     line = [line stringByReplacingOccurrencesOfString:@"@interface " withString:@""];
     line = [line componentsSeparatedByString:@"<"][0];
     line = [line componentsSeparatedByString:@"{"][0];
+    line = [line componentsSeparatedByString:@"//"][0];
+    line = [line componentsSeparatedByString:@"/*"][0];
     NSArray* components = [line componentsSeparatedByString:@":"];
     NSString* subclass = components[0];
     subclass = [subclass stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
     NSString* parentClass = components[1];
     parentClass = [parentClass stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-    
-    NSLog(@" class : %@ ;  subclass : %@ ",parentClass ,subclass);
-    
     ClassNode* newNode = [[ClassNode alloc] initWithClassName:parentClass subclasses:subclass];
     return newNode;
 }
@@ -42,28 +41,46 @@
         // first, separate by new line
         NSArray* lines = [rawDataString componentsSeparatedByCharactersInSet:[NSCharacterSet newlineCharacterSet]];
         
-        
         for (NSInteger x = 0  ; x < lines.count ; x++) {
             NSString *rawLine = lines[x];
             if (![rawLine hasPrefix:@"//"] && ![rawLine isEqualToString:@""] ) {
                 id node = [self createNodeWithString:lines[x]];
-                
                 [_classNodes addObject:node];
             }
         }
     }
     
     [self classPair];
-    [self classPair];
-    [self classPair];
+
+    /*
+     |	└──RACSignal
+     |	|	├──RACChannelTerminal
+     |	|	├──RACDynamicSignal
+     |	|	├──RACEmptySignal
+     |	|	├──RACErrorSignal
+     |	|	├──RACReturnSignal
+     |	|	└──RACSubject
+     |	|		├──RACBehaviorSubject
+     |	|		├──RACGroupedSignal
+     |	|		└──RACReplaySubject
+     ├──RACSubscriber
+     ├──RACSubscriptingAssignmentTrampoline
+     ├──RACTuple
+     ├──RACTupleNil
+     ├──RACTupleUnpackingTrampoline
+     ├──RACUnit
+     ├──RNCryptor
+     |	├──RNDecryptor
+     |	|	└──RNOpenSSLDecryptor
+     |	└──RNEncryptor
+     |	|	└──RNOpenSSLEncryptor
+     */
     return self;
 }
 
-- (BOOL)isDone {
-    return YES;
-}
 
 - (void)classPair {
+    NSInteger classNum = _classNodes.count;
     for (NSInteger i = 0 ; i < _classNodes.count; i++) {
         for (NSInteger j = 0 ; j < _classNodes.count; j++) {
             if (i!=j) {
@@ -71,31 +88,32 @@
                 ClassNode* otherNode = _classNodes[j];
                 if ([node compareAndCombineWithClass:otherNode]) {
                     [_classNodes removeObject:otherNode];
+                    if (j<i) {
+                        i--;
+                    }
+                    j--;
                 }
             }
         }
     }
+    //if count is modified then do next time
+    if (classNum != _classNodes.count) {
+        [self classPair];
+    }
+    else {
+        return;
+    }
     
-//    if (self.isDone) {
-//        return;
-//    }
-//    else {
-//        [self classPair];
-//    }
 }
-
 
 - (NSString*)classDescription {
     NSMutableString * desc = [NSMutableString string];
-    
     for (NSInteger i=0; i<_classNodes.count; i++) {
         ClassNode* node = (ClassNode*)_classNodes[i];
-        [desc appendString:[node descriptionWithLvl:0]];
+        NSNumber *end = [NSNumber numberWithBool:NO];
+        NSArray *ends = [NSArray arrayWithObject:end];
+        [desc appendString:[node descriptionWithLvl:0 ends:ends]];
     }
-    
-//    - UITestReport20170310
-//    ├── log.txt
-//    └──images    
     return desc;
 }
 @end

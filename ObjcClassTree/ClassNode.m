@@ -31,19 +31,32 @@
 }
 
 - (BOOL)isEqual:(id)object {
+
+    __block BOOL isequal = NO;
     if ([object isKindOfClass:[ClassNode class]]) {
         ClassNode * node = (ClassNode*)object;
-        return [self.name isEqualToString:node.name];
+        if ([self.name isEqualToString:node.name]) {
+            if ([self.subClassNodes count] == [node.subClassNodes count]) {
+                isequal = YES;
+                [self.subClassNodes enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+                    ClassNode* selfNode = (ClassNode*)obj;
+                    ClassNode* otherNode = node.subClassNodes[idx];
+                    if (![selfNode isEqual:otherNode]) {
+                        isequal = NO;
+                        *stop = YES;
+                    }
+                }];
+            }
+        }
+        return  isequal;
     }
-    else {
-        return NO;
-    }
+    return isequal;
 }
 
 
 // compare, if class is the smae insert subclasses,else return no. create class
 - (BOOL)compareAndCombineWithClass:(ClassNode*)node {
-    if ([self isEqual:node]) {
+    if ([self.name isEqualToString:node.name]) {
         [_subClassNodes addObjectsFromArray:node.subClassNodes];
         return YES;
     }
@@ -58,20 +71,52 @@
     return NO;
 }
 
-- (NSString*) descriptionWithLvl:(NSInteger)level {
+- (NSString*) descriptionWithLvl:(NSInteger)level ends:(NSArray*)ends {
     __block NSMutableString * desc = [NSMutableString string];
-    for (NSInteger i=0; i<level; i++) {
-        [desc appendString:@"├──"];
+//    NSNumber *number ;
+//    [number boolValue];
+    if (level==0) {
+        [desc appendString:@"\n"];
+        [desc appendString:@"\n"];
+    }
+    else {
+        for (NSInteger i=0; i<level; i++) {
+            [desc appendString:@"\t"];
+            NSNumber* isEnd = (NSNumber*)ends[i];
+            if (![isEnd boolValue] && i != level-1 ) {
+                [desc appendString:@"|"];
+            }
+            else {
+                
+            }
+            
+        }
+        NSNumber *laseEnd = [ends lastObject];
+        
+        [desc appendString: ([laseEnd boolValue])?@"└──": @"├──"];
     }
     [desc appendString:self.name];
     
     level+=1;
+    id lastEl = [_subClassNodes lastObject];
     [self.subClassNodes enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         ClassNode* node = (ClassNode*)obj;
         [desc appendString:@"\n"];
-        [desc appendString:[node descriptionWithLvl:level]];
+        NSMutableArray * newEnds = [NSMutableArray arrayWithArray:ends];
+        [newEnds addObject:[NSNumber numberWithBool:(obj==lastEl)]];
+        [desc appendString:[node descriptionWithLvl:level ends:newEnds]];
     }];
     return desc;
+}
+
+- (NSString*)description {
+    NSMutableString* desc = [NSMutableString string];
+    for (NSInteger i=0; i<_subClassNodes.count; i++) {
+        ClassNode* node = (ClassNode*)_subClassNodes[i];
+        [desc appendFormat:@"%@", node.description];
+        [desc appendFormat:@";"];
+    }
+    return [NSString stringWithFormat:@" %@ \n  %@",_name,desc];
 }
 
 @end
