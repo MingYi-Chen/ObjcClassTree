@@ -32,4 +32,4 @@ input=$classPath/tmp1.txt
 output=$classPath/$outputfile
 
 ObjcClassTree $input $output
-#rm tmp1.txt
+rm tmp1.txt
