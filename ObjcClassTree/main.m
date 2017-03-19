@@ -9,21 +9,36 @@
 #import <Foundation/Foundation.h>
 #import "ClassManager.h"
 
+//#define  debug
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         // insert code here...        
         
-        NSString* filePath = @"log3";
-        NSString* fileRoot = [[NSBundle mainBundle] pathForResource:filePath ofType:@"txt"];
+#ifdef debug
+        NSString* filePath = @"input";
+        NSString* fileContent = [[NSBundle mainBundle] pathForResource:filePath ofType:@"txt"];
         NSString* outfilePath = @"desc.txt";
+        fileContent = [NSString stringWithContentsOfFile:fileContent encoding:NSUTF8StringEncoding error:nil];
+#else
+        
+        NSArray* arguments = [[NSProcessInfo processInfo] arguments];
+        
+//        [arguments enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+//            NSObject* obj1 = (NSObject*)obj;
+//            NSLog(@"%@ \n", obj1.description);
+//        }];
+        
+        NSString* filePath = arguments[1];
+        NSString* outfilePath = arguments[2];
+        NSString* fileContent = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];;
+        
+#endif
         
         // read everything from text
-        NSString* fileContents =
-        [NSString stringWithContentsOfFile:fileRoot
-                                  encoding:NSUTF8StringEncoding error:nil];
-        ClassManager *manager = [[ClassManager alloc] initWithString:fileContents];
+        ClassManager *manager = [[ClassManager alloc] initWithString:fileContent];
         NSString* desc = [manager classDescription];
+//        NSLog(@"%@",desc);
         
         [desc writeToFile:outfilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     }

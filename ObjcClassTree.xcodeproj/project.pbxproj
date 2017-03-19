@@ -25,8 +25,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B614B0641E7D089800395E9E /* desc.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = desc.txt; path = "../../../../Library/Developer/Xcode/DerivedData/ObjcClassTree-dyfguluywwdaurhenflwwnhmenbe/Build/Products/Debug/desc.txt"; sourceTree = "<group>"; };
-		B614B0651E7D089800395E9E /* log3.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = log3.txt; path = "../../../../Library/Developer/Xcode/DerivedData/ObjcClassTree-dyfguluywwdaurhenflwwnhmenbe/Build/Products/Debug/log3.txt"; sourceTree = "<group>"; };
 		B615F9C01E76ED2D00AC681A /* ObjcClassTree */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ObjcClassTree; sourceTree = BUILT_PRODUCTS_DIR; };
 		B615F9C31E76ED2D00AC681A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B615F9CD1E76EDA600AC681A /* ClassNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassNode.h; sourceTree = "<group>"; };
@@ -65,8 +63,6 @@
 		B615F9C21E76ED2D00AC681A /* ObjcClassTree */ = {
 			isa = PBXGroup;
 			children = (
-				B614B0641E7D089800395E9E /* desc.txt */,
-				B614B0651E7D089800395E9E /* log3.txt */,
 				B615F9C31E76ED2D00AC681A /* main.m */,
 				B615F9CD1E76EDA600AC681A /* ClassNode.h */,
 				B615F9CE1E76EDA600AC681A /* ClassNode.m */,
